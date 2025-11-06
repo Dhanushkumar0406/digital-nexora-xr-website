@@ -134,31 +134,47 @@ interface IWebsiteType {
 const websiteTypes: IWebsiteType[] = [
   {
     title: "E-commerce Website",
-    description: "Full-featured online store with payment integration, product management, and shopping cart functionality.",
+    description: "Depends on product count, payment gateway, order dashboard, and delivery system. Final scope and pricing vary based on these factors.",
     icon: web,
     gradient: "from-purple-500 via-pink-500 to-red-500",
-    features: ["Payment Gateway", "Product Catalog", "Shopping Cart", "Order Management"],
+    features: [
+      "Product count (varies)",
+      "Payment gateway integration",
+      "Order dashboard / management",
+      "Delivery / fulfillment integration",
+    ],
   },
   {
     title: "Professional Website",
-    description: "Sophisticated corporate website with premium design, portfolio showcase, and client management systems.",
+    description: "Custom design package with a modern UI/UX, animations, and on-page SEO — ideal for premium corporate and portfolio sites.",
     icon: backend,
     gradient: "from-cyan-500 via-blue-500 to-purple-500",
-    features: ["Portfolio Showcase", "Client Portal", "CMS Integration", "Analytics Dashboard"],
+    features: [
+      "Custom UI/UX",
+      "Animations / Modern layout",
+      "Fast hosting setup",
+      "On-page SEO",
+    ],
   },
   {
     title: "Business Website",
-    description: "Complete business solution with service pages, contact forms, booking systems, and SEO optimization.",
+    description: "Complete business solution including services pages, portfolio/gallery, WhatsApp integration and basic SEO.",
     icon: mobile,
     gradient: "from-green-500 via-teal-500 to-cyan-500",
-    features: ["Service Pages", "Booking System", "Contact Forms", "SEO Optimized"],
+    features: [
+      "All basic pages (Home, About, Contact)",
+      "Services page",
+      "Gallery / Portfolio",
+      "WhatsApp integration",
+      "Basic SEO",
+    ],
   },
   {
     title: "Basic Website",
-    description: "Clean and modern informational website perfect for startups, landing pages, and personal projects.",
+    description: "Included: Home, About, Contact and basic mobile responsive layout — a simple, fast informational site.",
     icon: creator,
     gradient: "from-orange-500 via-yellow-500 to-pink-500",
-    features: ["Responsive Design", "Fast Loading", "Modern UI", "Mobile Friendly"],
+    features: ["Home page", "About page", "Contact page", "Basic mobile responsive"],
   },
 ];
 

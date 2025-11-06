@@ -23,6 +23,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src", "src/types/globals.d.ts"],
+  "exclude": ["src/**/*.test.*", "src/**/*.spec.*", "src/**/*.stories.*"],
   "typeRoots": ["./node_modules/@types", "./src/types"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

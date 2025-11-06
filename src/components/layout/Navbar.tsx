@@ -104,12 +104,7 @@ const Navbar = () => {
           <p
             className="flex cursor-pointer text-[18px] font-bold text-white transition-all duration-300 group-hover:tracking-wider"
             style={{
-              textShadow: "0 0 20px rgba(147, 51, 234, 0.8), 0 0 40px rgba(6, 182, 212, 0.5), 0 4px 8px rgba(0, 0, 0, 0.3)",
               transform: scrolled ? "none" : "perspective(500px) rotateX(2deg)",
-              backgroundImage: "linear-gradient(135deg, #ffffff 0%, #a855f7 50%, #06b6d4 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
             }}
           >
             {config.html.title}
@@ -129,6 +124,8 @@ const Navbar = () => {
             </li>
           ))}
         </ul>
+
+        {/* Desktop CTA removed as requested */}
 
         <div className="flex flex-1 items-center justify-end sm:hidden">
           <img

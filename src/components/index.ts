@@ -1,10 +1,4 @@
 // @ts-nocheck
-import {
-  EarthCanvas,
-  BallCanvas,
-  ComputersCanvas,
-  StarsCanvas,
-} from "./canvas";
 import Hero from "./sections/Hero";
 import Navbar from "./layout/Navbar";
 import About from "./sections/About";
@@ -25,8 +19,4 @@ export {
   Feedbacks,
   Contact,
   CanvasLoader,
-  EarthCanvas,
-  BallCanvas,
-  ComputersCanvas,
-  StarsCanvas,
 };
