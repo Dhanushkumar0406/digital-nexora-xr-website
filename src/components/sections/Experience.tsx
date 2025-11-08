@@ -64,7 +64,7 @@ const Experience = () => {
       <div className="mt-20 flex flex-col">
         <VerticalTimeline>
           {experiences.map((experience, index) => (
-            <ExperienceCard key={index} {...experience} />
+            <ExperienceCard key={`${experience.companyName}-${experience.date}-${index}`} {...experience} />
           ))}
         </VerticalTimeline>
       </div>

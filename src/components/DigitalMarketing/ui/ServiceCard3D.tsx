@@ -116,8 +116,8 @@ const ServiceCard3D: React.FC<{ service: Service }> = ({ service }) => {
 
         <ul className="text-sm text-indigo-200/90 mt-3 space-y-1 flex-1">
           {service.bullets.map((b, i) => (
-            <li key={i} className="flex items-start gap-2">
-              <span 
+            <li key={`${service.id}-bullet-${i}-${b.substring(0, 20)}`} className="flex items-start gap-2">
+              <span
                 className="inline-block w-2 h-2 rounded-full mt-2"
                 style={{ background: color2 }}
               />

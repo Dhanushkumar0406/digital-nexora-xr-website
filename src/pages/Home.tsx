@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import { About, Hero, Tech, Contact } from "../components";
+import { AboutUs, Hero, Tech, Contact } from "../components";
 const StarsCanvas = lazy(() => import("../components/canvas/Stars"));
 
 const DigitalMarketing = lazy(() => import("../components/DigitalMarketing/DigitalMarketing"));
@@ -17,7 +17,7 @@ const Home = () => {
       {/* Main Content - Layered above stars */}
       <div className="relative z-10">
         <Hero />
-        <About />
+        <AboutUs />
         <Tech />
         <Suspense fallback={<div className="min-h-[420px] flex items-center justify-center">Loading section…</div>}>
           <DigitalMarketing />

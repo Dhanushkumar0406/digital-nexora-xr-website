@@ -42,3 +42,11 @@ export type TMotion = {
   delay: number;
   duration: number;
 };
+
+export type TTeamMember = {
+  name: string;
+  degree: string;
+  role: string;
+  specialization: string;
+  image: string;
+};

@@ -44,7 +44,7 @@
 }
 
 .green-pink-gradient {
-  background: "#00cea8";
+  background: #00cea8;
   background: linear-gradient(90.13deg, #00cea8 1.9%, #bf61ff 97.5%);
   background: -webkit-linear-gradient(-90.13deg, #00cea8 1.9%, #bf61ff 97.5%);
 }
@@ -306,4 +306,171 @@
   border-radius: inherit;
   pointer-events: none;
   border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* About Us Section - 3D Diamond Glow & Glassmorphism Styles */
+.diamond-glow-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,
+    rgba(6, 182, 212, 0.4) 0%,
+    rgba(192, 192, 192, 0.3) 50%,
+    rgba(6, 182, 212, 0.4) 100%);
+  filter: blur(8px);
+  z-index: 0;
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.diamond-glow-ring::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,
+    rgba(192, 192, 192, 0.5) 0%,
+    rgba(6, 182, 212, 0.5) 100%);
+  filter: blur(4px);
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.team-card-glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.team-card-glass::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(6, 182, 212, 0.1),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.team-card-glass:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow:
+    0 20px 60px rgba(6, 182, 212, 0.3),
+    0 0 0 1px rgba(6, 182, 212, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.team-card-glass:hover::before {
+  left: 100%;
+}
+
+.team-card-glass:hover .diamond-glow-ring {
+  opacity: 1;
+  transform: scale(1.1);
+  filter: blur(12px);
+}
+
+.team-profile-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
+  border: 3px solid rgba(6, 182, 212, 0.3);
+  box-shadow:
+    0 0 30px rgba(6, 182, 212, 0.4),
+    inset 0 0 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s ease;
+}
+
+.team-card-glass:hover .team-profile-image {
+  border-color: rgba(6, 182, 212, 0.6);
+  box-shadow:
+    0 0 50px rgba(6, 182, 212, 0.6),
+    inset 0 0 30px rgba(0, 0, 0, 0.3);
+  animation: float-subtle 3s ease-in-out infinite;
+}
+
+@keyframes float-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.text-glow-aqua {
+  text-shadow:
+    0 0 10px rgba(6, 182, 212, 0.5),
+    0 0 20px rgba(6, 182, 212, 0.3),
+    0 0 30px rgba(6, 182, 212, 0.2);
+}
+
+.text-glow-gold {
+  text-shadow:
+    0 0 10px rgba(255, 215, 0, 0.5),
+    0 0 20px rgba(255, 215, 0, 0.3),
+    0 0 30px rgba(255, 215, 0, 0.2);
+}
+
+.luxury-gradient-bg {
+  background: linear-gradient(135deg,
+    #0A0D17 0%,
+    #05070A 50%,
+    #0C111F 100%);
+  position: relative;
+}
+
+.luxury-gradient-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at top,
+    rgba(6, 182, 212, 0.15) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.luxury-gradient-bg::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at bottom,
+    rgba(255, 215, 0, 0.1) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
 }

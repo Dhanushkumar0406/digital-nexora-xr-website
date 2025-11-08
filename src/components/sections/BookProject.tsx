@@ -77,8 +77,6 @@ const BookProject = () => {
 
   const sendProjectEmail = async (formData: FormData) => {
     try {
-      console.log('Starting email send...');
-      
       // Check EmailJS configuration
       const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
@@ -128,18 +126,16 @@ ${formData.additionalInfo || 'No additional information provided'}
         throw new Error('EmailJS configuration is incomplete. Please check your environment variables.');
       }
 
-      const response = await emailjs.send(
+      await emailjs.send(
         serviceId,
         templateId,
         templateParams
       );
 
-      console.log('Email sent successfully:', response);
       return true;
     } catch (error) {
-      console.error('Email sending failed:', error);
       if (error instanceof Error) {
-        console.error('Error details:', error.message);
+        throw new Error(`Email sending failed: ${error.message}`);
       }
       throw error; // Re-throw the error to handle it in the submit handler
     }
@@ -174,7 +170,6 @@ ${formData.additionalInfo || 'No additional information provided'}
         draggable: true,
       });
     } catch (error) {
-      console.error('Failed to send PDF:', error);
       toast.error('Failed to send PDF. Please try again.', {
         position: "top-right",
         autoClose: 5000,
@@ -230,11 +225,9 @@ ${formData.additionalInfo || 'No additional information provided'}
         additionalInfo: "",
       });
     } catch (error) {
-      console.error('Submission failed:', error);
       let errorMessage = "Failed to submit project booking request. ";
-      
+
       if (error instanceof Error) {
-        console.error('Error details:', error.message);
         errorMessage += error.message;
       }
       

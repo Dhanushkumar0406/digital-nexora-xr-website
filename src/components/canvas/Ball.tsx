@@ -10,8 +10,12 @@ import {
 
 import CanvasLoader from "../layout/Loader";
 
-const Ball = (props: any) => {
-  const [decal] = useTexture([props.imgUrl]);
+interface BallProps {
+  imgUrl: string;
+}
+
+const Ball: React.FC<BallProps> = ({ imgUrl }) => {
+  const [decal] = useTexture([imgUrl]);
 
   return (
     <Float speed={1.75} rotationIntensity={1} floatIntensity={2}>
@@ -30,8 +34,6 @@ const Ball = (props: any) => {
           rotation={[2 * Math.PI, 0, 6.25]}
           scale={1}
           map={decal}
-          // @ts-expect-error
-          flatShading
         />
       </mesh>
     </Float>

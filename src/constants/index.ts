@@ -5,6 +5,7 @@ import type {
   TExperience,
   TTestimonial,
   TProject,
+  TTeamMember,
 } from "../types";
 
 import {
@@ -32,6 +33,8 @@ import {
   jobit,
   tripguide,
   threejs,
+  dhanushImg,
+  hariharasudhanImg,
 } from "../assets";
 
 export const navLinks: TNavLink[] = [
@@ -634,5 +637,22 @@ const allProjects: IProjectCategory[] = [
 
 const projects: TProject[] = allProjects.flatMap(cat => cat.projects);
 
-export { services, technologies, testimonials, experiences, projects, websiteTypes, allProjects };
+const teamMembers: TTeamMember[] = [
+  {
+    name: "Dhanush Kumar S",
+    degree: "B.E, EIE",
+    role: "AI Prompt Engineer",
+    specialization: "Full Stack 3D Web Developer",
+    image: dhanushImg,
+  },
+  {
+    name: "Hariharasudhan M",
+    degree: "BBA CA",
+    role: "Finance & Marketing Expert",
+    specialization: "Logistics & Transport Specialist",
+    image: hariharasudhanImg,
+  },
+];
+
+export { services, technologies, testimonials, experiences, projects, websiteTypes, allProjects, teamMembers };
 export type { IWebsiteType, IProjectCategory };

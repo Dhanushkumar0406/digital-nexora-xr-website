@@ -12,7 +12,7 @@ const INITIAL_STATE = Object.fromEntries(
 );
 
 const Contact = () => {
-  const formRef = useRef<React.LegacyRef<HTMLFormElement> | undefined>();
+  const formRef = useRef<HTMLFormElement>(null);
   const [form, setForm] = useState(INITIAL_STATE);
   const [loading, setLoading] = useState(false);
 
@@ -66,7 +66,6 @@ Message: ${form.message}`.trim();
         <Header useMotion={false} {...config.contact} />
 
         <form
-          // @ts-expect-error
           ref={formRef}
           onSubmit={handleSubmit}
           className="mt-12 flex flex-col gap-8"

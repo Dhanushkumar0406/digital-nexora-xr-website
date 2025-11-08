@@ -29,6 +29,10 @@ import carrent from "./carrent.png";
 import jobit from "./jobit.png";
 import tripguide from "./tripguide.png";
 
+// Team member images
+import dhanushImg from "../constants/dk.jpg";
+import hariharasudhanImg from "../constants/irah.jpg";
+
 export {
   backend,
   creator,
@@ -56,4 +60,6 @@ export {
   carrent,
   jobit,
   tripguide,
+  dhanushImg,
+  hariharasudhanImg,
 };
