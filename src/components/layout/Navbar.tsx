@@ -99,7 +99,11 @@ const Navbar = () => {
             window.scrollTo(0, 0);
           }}
         >
-
+          <img
+            src={Assets.dnxLogo ?? ""}
+            alt="DNX Logo"
+            className="h-10 w-10 object-contain transition-transform duration-300 group-hover:scale-110"
+          />
           <p
             className="flex cursor-pointer text-[18px] font-bold text-white transition-all duration-300 group-hover:tracking-wider"
             style={{
