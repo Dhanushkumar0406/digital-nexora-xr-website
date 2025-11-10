@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import { styles } from "../../constants/styles";
 import { navLinks } from "../../constants";
 import * as Assets from "../../assets";
 import { config } from "../../constants/config";
