@@ -85,28 +85,47 @@ const Navbar = () => {
       }`}
     >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
-        <Link
-          to="/"
-          className="flex items-center gap-3 group"
-          onClick={() => {
-            window.scrollTo(0, 0);
-          }}
-        >
-          <img
-            src={Assets.dnxLogo ?? ""}
-            alt="DNX Logo"
-            className="h-12 w-12 object-contain transition-transform duration-300 group-hover:scale-110"
-          />
-          <p
-            className="flex cursor-pointer text-[18px] font-bold text-white transition-all duration-300 group-hover:tracking-wider"
-            style={{
-              transform: scrolled ? "none" : "perspective(500px) rotateX(2deg)",
+        {/* Logo and Hamburger Menu Container */}
+        <div className="flex items-center gap-4">
+          <Link
+            to="/"
+            className="flex items-center gap-3 group"
+            onClick={() => {
+              window.scrollTo(0, 0);
             }}
           >
-            {config.html.title}
-          </p>
-        </Link>
+            <img
+              src={Assets.dnxLogo ?? ""}
+              alt="DNX Logo"
+              className="h-12 w-12 object-contain transition-transform duration-300 group-hover:scale-110"
+            />
+            <p
+              className={`flex cursor-pointer text-[18px] font-bold text-white transition-all duration-300 group-hover:tracking-wider ${
+                scrolled ? "" : "[transform:perspective(500px)_rotateX(2deg)]"
+              }`}
+            >
+              {config.html.title}
+            </p>
+          </Link>
 
+          {/* Hamburger Menu Button - Only visible on mobile, right next to logo */}
+          <button
+            onClick={() => setToggle(!toggle)}
+            className="cursor-pointer p-2 rounded-lg transition-all duration-200 hover:bg-white/10 lg:hidden"
+            aria-label={toggle ? "Close menu" : "Open menu"}
+            type="button"
+          >
+            <img
+              src={toggle ? Assets.close ?? "" : Assets.menu ?? ""}
+              alt=""
+              className={`h-[28px] w-[28px] object-contain transition-all duration-200 ${
+                scrolled ? "" : "brightness-0 invert"
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Desktop Navigation */}
         <ul className="hidden list-none flex-row gap-10 lg:flex">
           {navLinks.map((nav) => (
             <li key={nav.id}>
@@ -123,45 +142,27 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* Desktop CTA removed as requested */}
-
-        <div className="flex flex-1 items-center justify-end lg:hidden">
-          <button
-            onClick={() => setToggle(!toggle)}
-            className="cursor-pointer p-2 rounded-lg transition-all duration-200 hover:bg-white/10"
-            aria-label={toggle ? "Close menu" : "Open menu"}
-            type="button"
-          >
-            <img
-              src={toggle ? Assets.close ?? "" : Assets.menu ?? ""}
-              alt=""
-              className={`h-[28px] w-[28px] object-contain transition-all duration-200 ${
-                scrolled ? "" : "brightness-0 invert"
-              }`}
-            />
-          </button>
-
-          <div
-            className={`${
-              !toggle ? "hidden" : "flex"
-            } black-gradient absolute right-0 top-20 z-10 mx-4 my-2 min-w-[140px] rounded-xl p-6`}
-          >
-            <ul className="flex flex-1 list-none flex-col items-start justify-end gap-4">
-              {navLinks.map((nav) => (
-                <li key={nav.id}>
-                  <button
-                    className={`font-poppins cursor-pointer text-[16px] font-medium ${
-                      active === nav.id ? "text-white" : "text-secondary"
-                    } hover:text-white transition-colors duration-200`}
-                    onClick={() => handleNavClick(nav.id)}
-                    type="button"
-                  >
-                    {nav.title}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Mobile Menu Dropdown */}
+        <div
+          className={`${
+            !toggle ? "hidden" : "flex"
+          } black-gradient absolute right-0 top-20 z-10 mx-4 my-2 min-w-[140px] rounded-xl p-6 lg:hidden`}
+        >
+          <ul className="flex flex-1 list-none flex-col items-start justify-end gap-4">
+            {navLinks.map((nav) => (
+              <li key={nav.id}>
+                <button
+                  className={`font-poppins cursor-pointer text-[16px] font-medium ${
+                    active === nav.id ? "text-white" : "text-secondary"
+                  } hover:text-white transition-colors duration-200`}
+                  onClick={() => handleNavClick(nav.id)}
+                  type="button"
+                >
+                  {nav.title}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </nav>

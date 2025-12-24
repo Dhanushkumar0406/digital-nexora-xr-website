@@ -610,3 +610,52 @@
     font-size: 0.7rem;
   }
 }
+
+/* Hero Component Styles */
+.hero-card-background {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+
+.hero-text-saffron {
+  background: linear-gradient(135deg, #FF9933 0%, #FF7700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 8px rgba(255, 153, 51, 0.3);
+  filter: drop-shadow(0 0 8px rgba(255, 153, 51, 0.4));
+}
+
+.hero-text-white {
+  color: #FFFFFF;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 2px 8px rgba(255, 255, 255, 0.2);
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+}
+
+.hero-text-green {
+  background: linear-gradient(135deg, #138808 0%, #11AA00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 8px rgba(19, 136, 8, 0.3);
+  filter: drop-shadow(0 0 8px rgba(19, 136, 8, 0.4));
+}
+
+.hero-tagline-shadow {
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.hero-shine-animation {
+  animation: shine 3s infinite;
+}
+
+.hero-scroll-indicator {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px 0 rgba(147, 51, 234, 0.37);
+}
+
+.hero-scroll-dot {
+  box-shadow: 0 0 15px rgba(147, 51, 234, 0.8);
+}
