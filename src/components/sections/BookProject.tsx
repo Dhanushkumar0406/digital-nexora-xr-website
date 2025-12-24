@@ -5,7 +5,6 @@ import { slideIn, textVariant } from "../../utils/motion";
 import { SectionWrapper } from "../../hoc";
 import { EarthCanvas } from "../canvas";
 import emailjs from '@emailjs/browser';
-import { generateProjectPDF } from "../../utils/pdfGenerator";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,10 +13,11 @@ emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 
 interface FormData {
   projectName: string;
-  websiteType: string;
-  digitalMarketingType: string;
+  organizationName: string;
+  projectType: "website" | "marketing" | "both" | "";
+  websiteType: string | null;
+  marketingType: string | null;
   purpose: string;
-  duration: string;
   name: string;
   email: string;
   phone: string;
@@ -28,10 +28,11 @@ const BookProject = () => {
   const developerEmail = import.meta.env.VITE_DEVELOPER_EMAIL;
   const [formData, setFormData] = useState<FormData>({
     projectName: "",
-    websiteType: "",
-    digitalMarketingType: "",
+    organizationName: "",
+    projectType: "",
+    websiteType: null,
+    marketingType: null,
     purpose: "",
-    duration: "",
     name: "",
     email: "",
     phone: "",
@@ -46,9 +47,20 @@ const BookProject = () => {
     >
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
 
+    // Handle project type change with conditional reset
+    if (name === "projectType") {
+      setFormData(prev => ({
+        ...prev,
+        projectType: value as FormData["projectType"],
+        // Reset website/marketing types when switching project type
+        websiteType: value === "marketing" ? null : prev.websiteType,
+        marketingType: value === "website" ? null : prev.marketingType,
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
+  };
 
   const sendProjectEmail = async (formData: FormData) => {
     try {
@@ -56,7 +68,7 @@ const BookProject = () => {
       const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-      
+
       // Format the message content
       const emailContent = `
 Subject: New Project Booking: ${formData.projectName}
@@ -64,10 +76,11 @@ Subject: New Project Booking: ${formData.projectName}
 Project Details:
 ---------------
 Project Name: ${formData.projectName}
-Website Type: ${formData.websiteType}
-Digital Marketing Type: ${formData.digitalMarketingType}
+Organization/Company: ${formData.organizationName || 'Not provided'}
+Project Type: ${formData.projectType}
+${formData.websiteType ? `Website Type: ${formData.websiteType}` : ''}
+${formData.marketingType ? `Marketing Type: ${formData.marketingType}` : ''}
 Purpose: ${formData.purpose}
-Duration: ${formData.duration}
 
 Client Information:
 -----------------
@@ -79,20 +92,21 @@ Additional Information:
 ---------------------
 ${formData.additionalInfo || 'No additional information provided'}
       `.trim();
-      
+
       // Prepare template parameters
       const templateParams = {
         to_email: developerEmail,
         from_name: formData.name,
         from_email: formData.email,
         project_name: formData.projectName,
-        website_type: formData.websiteType,
-        digital_marketing_type: formData.digitalMarketingType,
+        organization_name: formData.organizationName,
+        project_type: formData.projectType,
+        website_type: formData.websiteType || 'N/A',
+        marketing_type: formData.marketingType || 'N/A',
         purpose: formData.purpose,
-        duration: formData.duration,
         phone: formData.phone,
         additional_info: formData.additionalInfo,
-        message: emailContent // This will contain the full formatted message
+        message: emailContent
       };
 
       if (!serviceId || !templateId || !publicKey) {
@@ -110,47 +124,7 @@ ${formData.additionalInfo || 'No additional information provided'}
       if (error instanceof Error) {
         throw new Error(`Email sending failed: ${error.message}`);
       }
-      throw error; // Re-throw the error to handle it in the submit handler
-    }
-  };
-
-  const handleGenerateAndSendPDF = async () => {
-    const pdf = generateProjectPDF(formData);
-    const pdfBlob = pdf.output('blob');
-    
-    const formDataWithFiles = new FormData();
-    formDataWithFiles.append('pdf', pdfBlob, 'project_details.pdf');
-    
-    try {
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        {
-          to_email: developerEmail,
-          from_name: formData.name,
-          from_email: formData.email,
-          message: "Project details PDF attached",
-          attachment: formDataWithFiles
-        },
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-      );
-      toast.success('PDF has been sent to the developer successfully!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-    } catch (error) {
-      toast.error('Failed to send PDF. Please try again.', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      throw error;
     }
   };
 
@@ -160,11 +134,20 @@ ${formData.additionalInfo || 'No additional information provided'}
 
     try {
       // Validate required fields
-      const requiredFields: Array<keyof FormData> = ['projectName', 'websiteType', 'digitalMarketingType', 'purpose', 'duration', 'name', 'email', 'phone'];
-      const missingFields = requiredFields.filter(field => !formData[field]);
-      
-      if (missingFields.length > 0) {
-        throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+      if (!formData.projectName || !formData.projectType || !formData.purpose ||
+          !formData.name || !formData.email || !formData.phone) {
+        throw new Error('Please fill in all required fields');
+      }
+
+      // Validate project-type specific fields
+      if (formData.projectType === "website" && !formData.websiteType) {
+        throw new Error('Please select a website type');
+      }
+      if (formData.projectType === "marketing" && !formData.marketingType) {
+        throw new Error('Please select a marketing type');
+      }
+      if (formData.projectType === "both" && (!formData.websiteType || !formData.marketingType)) {
+        throw new Error('Please select both website and marketing types');
       }
 
       // Validate email format
@@ -173,9 +156,16 @@ ${formData.additionalInfo || 'No additional information provided'}
         throw new Error('Please enter a valid email address');
       }
 
+      // Prepare clean payload
+      const payload: FormData = {
+        ...formData,
+        websiteType: formData.projectType === "marketing" ? null : formData.websiteType,
+        marketingType: formData.projectType === "website" ? null : formData.marketingType,
+      };
+
       // Send email with project details
-      await sendProjectEmail(formData);
-      
+      await sendProjectEmail(payload);
+
       toast.success("Project booking request submitted successfully! We will contact you soon.", {
         position: "top-right",
         autoClose: 5000,
@@ -187,10 +177,11 @@ ${formData.additionalInfo || 'No additional information provided'}
 
       setFormData({
         projectName: "",
-        websiteType: "",
-        digitalMarketingType: "",
+        organizationName: "",
+        projectType: "",
+        websiteType: null,
+        marketingType: null,
         purpose: "",
-        duration: "",
         name: "",
         email: "",
         phone: "",
@@ -202,12 +193,15 @@ ${formData.additionalInfo || 'No additional information provided'}
       if (error instanceof Error) {
         errorMessage += error.message;
       }
-      
+
       alert(errorMessage + "\nPlease try again or contact support.");
     } finally {
       setLoading(false);
     }
   };
+
+  const shouldShowWebsiteType = formData.projectType === "website" || formData.projectType === "both";
+  const shouldShowMarketingType = formData.projectType === "marketing" || formData.projectType === "both";
 
   return (
     <div className="flex flex-col-reverse gap-10 overflow-hidden xl:mt-12 xl:flex-row">
@@ -224,7 +218,7 @@ ${formData.additionalInfo || 'No additional information provided'}
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col gap-6">
           {/* Project Name */}
           <label className="flex flex-col">
-            <span className="mb-4 font-medium text-white">Project Name</span>
+            <span className="mb-4 font-medium text-white">Project Name *</span>
             <input
               type="text"
               name="projectName"
@@ -236,56 +230,84 @@ ${formData.additionalInfo || 'No additional information provided'}
             />
           </label>
 
-          {/* Website Type */}
+          {/* Organization / Company Name */}
           <label className="flex flex-col">
-            <span className="mb-4 font-medium text-white">
-              Type of Website
-            </span>
+            <span className="mb-4 font-medium text-white">Organization / Company Name</span>
+            <input
+              type="text"
+              name="organizationName"
+              value={formData.organizationName}
+              onChange={handleChange}
+              placeholder="Your organization or company name (optional)"
+              className="bg-tertiary placeholder:text-secondary rounded-lg border-none px-6 py-4 font-medium text-white outline-none"
+            />
+          </label>
+
+          {/* Type of Project */}
+          <label className="flex flex-col">
+            <span className="mb-4 font-medium text-white">Type of Project *</span>
             <select
-              name="websiteType"
-              value={formData.websiteType}
+              name="projectType"
+              value={formData.projectType}
               onChange={handleChange}
               required
               className="bg-tertiary placeholder:text-secondary rounded-lg border-none px-6 py-4 font-medium text-white outline-none"
             >
-              <option value="">Select Website Type</option>
-              <option value="basic">Basic Website</option>
-              <option value="professional">Professional Website</option>
-              <option value="commercial">Commercial Website</option>
-              <option value="ecommerce">E-Commerce Website</option>
-              <option value="portfolio">Portfolio Website</option>
-              <option value="blog">Blog/Content Website</option>
-              <option value="custom">Custom Solution</option>
+              <option value="">Select Project Type</option>
+              <option value="website">Website</option>
+              <option value="marketing">Marketing</option>
+              <option value="both">Both</option>
             </select>
           </label>
 
-          {/* Types of Digital Marketing */}
-          <label className="flex flex-col">
-            <span className="mb-4 font-medium text-white">
-              Types of Digital Marketing
-            </span>
-            <select
-              name="digitalMarketingType"
-              value={formData.digitalMarketingType}
-              onChange={handleChange}
-              required
-              className="bg-tertiary placeholder:text-secondary rounded-lg border-none px-6 py-4 font-medium text-white outline-none"
-            >
-              <option value="">Select Digital Marketing Type</option>
-              <option value="social-media">Social Media Management</option>
-              <option value="digital-advertising">Digital Advertising</option>
-              <option value="brand-strategy">Brand Strategy</option>
-              <option value="search-optimization">Search Optimization</option>
-              <option value="content-strategy">Content Strategy</option>
-              <option value="digital-infrastructure">Digital Infrastructure</option>
-            </select>
-          </label>
+          {/* Conditional: Types of Website */}
+          {shouldShowWebsiteType && (
+            <label className="flex flex-col">
+              <span className="mb-4 font-medium text-white">Types of Website *</span>
+              <select
+                name="websiteType"
+                value={formData.websiteType || ""}
+                onChange={handleChange}
+                required
+                className="bg-tertiary placeholder:text-secondary rounded-lg border-none px-6 py-4 font-medium text-white outline-none"
+              >
+                <option value="">Select Website Type</option>
+                <option value="basic">Basic Website</option>
+                <option value="professional">Professional Website</option>
+                <option value="commercial">Commercial Website</option>
+                <option value="ecommerce">E-Commerce Website</option>
+                <option value="portfolio">Portfolio Website</option>
+                <option value="blog">Blog/Content Website</option>
+                <option value="custom">Custom Solution</option>
+              </select>
+            </label>
+          )}
+
+          {/* Conditional: Types of Marketing */}
+          {shouldShowMarketingType && (
+            <label className="flex flex-col">
+              <span className="mb-4 font-medium text-white">Types of Marketing *</span>
+              <select
+                name="marketingType"
+                value={formData.marketingType || ""}
+                onChange={handleChange}
+                required
+                className="bg-tertiary placeholder:text-secondary rounded-lg border-none px-6 py-4 font-medium text-white outline-none"
+              >
+                <option value="">Select Marketing Type</option>
+                <option value="social-media">Social Media Management</option>
+                <option value="digital-advertising">Digital Advertising</option>
+                <option value="brand-strategy">Brand Strategy</option>
+                <option value="search-optimization">Search Optimization</option>
+                <option value="content-strategy">Content Strategy</option>
+                <option value="digital-infrastructure">Digital Infrastructure</option>
+              </select>
+            </label>
+          )}
 
           {/* Purpose */}
           <label className="flex flex-col">
-            <span className="mb-4 font-medium text-white">
-              Purpose of Project
-            </span>
+            <span className="mb-4 font-medium text-white">Purpose of Project *</span>
             <textarea
               rows={4}
               name="purpose"
@@ -297,28 +319,10 @@ ${formData.additionalInfo || 'No additional information provided'}
             />
           </label>
 
-          {/* Time Duration */}
-          <label className="flex flex-col">
-            <span className="mb-4 font-medium text-white">Time Duration</span>
-            <select
-              name="duration"
-              value={formData.duration}
-              onChange={handleChange}
-              required
-              className="bg-tertiary placeholder:text-secondary rounded-lg border-none px-6 py-4 font-medium text-white outline-none"
-            >
-              <option value="">Select Duration</option>
-              <option value="1week">1 Week</option>
-              <option value="15days">15 Days</option>
-              <option value="1month">1 Month</option>
-              <option value="2months">More than 2 Months</option>
-            </select>
-          </label>
-
           {/* Contact Information */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <label className="flex flex-col">
-              <span className="mb-4 font-medium text-white">Your Name</span>
+              <span className="mb-4 font-medium text-white">Your Name *</span>
               <input
                 type="text"
                 name="name"
@@ -331,7 +335,7 @@ ${formData.additionalInfo || 'No additional information provided'}
             </label>
 
             <label className="flex flex-col">
-              <span className="mb-4 font-medium text-white">Your Email</span>
+              <span className="mb-4 font-medium text-white">Your Email *</span>
               <input
                 type="email"
                 name="email"
@@ -345,7 +349,7 @@ ${formData.additionalInfo || 'No additional information provided'}
           </div>
 
           <label className="flex flex-col">
-            <span className="mb-4 font-medium text-white">Phone Number</span>
+            <span className="mb-4 font-medium text-white">Phone Number *</span>
             <input
               type="tel"
               name="phone"
@@ -359,9 +363,7 @@ ${formData.additionalInfo || 'No additional information provided'}
 
           {/* Additional Info */}
           <label className="flex flex-col">
-            <span className="mb-4 font-medium text-white">
-              Additional Information
-            </span>
+            <span className="mb-4 font-medium text-white">Additional Information</span>
             <textarea
               rows={3}
               name="additionalInfo"
@@ -379,17 +381,6 @@ ${formData.additionalInfo || 'No additional information provided'}
               className="bg-tertiary shadow-primary flex-1 rounded-xl px-8 py-3 font-bold text-white shadow-md outline-none transition-all hover:bg-[#1a1a2e]"
             >
               {loading ? "Submitting..." : "Book Your Project"}
-            </button>
-          </div>
-
-          {/* Generate and Send PDF Button */}
-          <div className="mt-4 flex flex-col gap-3 border-t border-gray-700 pt-6">
-            <button
-              type="button"
-              onClick={handleGenerateAndSendPDF}
-              className="bg-[#00cea8] shadow-primary rounded-xl px-8 py-3 font-bold text-white shadow-md outline-none transition-all hover:bg-[#00b894]"
-            >
-              📄 Save as PDF & Send to Developer
             </button>
           </div>
         </form>
