@@ -107,7 +107,7 @@ const Navbar = () => {
           </p>
         </Link>
 
-        <ul className="hidden list-none flex-row gap-10 sm:flex">
+        <ul className="hidden list-none flex-row gap-10 lg:flex">
           {navLinks.map((nav) => (
             <li key={nav.id}>
               <button
@@ -125,7 +125,7 @@ const Navbar = () => {
 
         {/* Desktop CTA removed as requested */}
 
-        <div className="flex flex-1 items-center justify-end sm:hidden">
+        <div className="flex flex-1 items-center justify-end lg:hidden">
           <img
             src={toggle ? Assets.close ?? "" : Assets.menu ?? ""}
             alt="menu"
