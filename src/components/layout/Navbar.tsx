@@ -126,12 +126,20 @@ const Navbar = () => {
         {/* Desktop CTA removed as requested */}
 
         <div className="flex flex-1 items-center justify-end lg:hidden">
-          <img
-            src={toggle ? Assets.close ?? "" : Assets.menu ?? ""}
-            alt="menu"
-            className="h-[28px] w-[28px] object-contain"
+          <button
             onClick={() => setToggle(!toggle)}
-          />
+            className="cursor-pointer p-2 rounded-lg transition-all duration-200 hover:bg-white/10"
+            aria-label={toggle ? "Close menu" : "Open menu"}
+            type="button"
+          >
+            <img
+              src={toggle ? Assets.close ?? "" : Assets.menu ?? ""}
+              alt=""
+              className={`h-[28px] w-[28px] object-contain transition-all duration-200 ${
+                scrolled ? "" : "brightness-0 invert"
+              }`}
+            />
+          </button>
 
           <div
             className={`${
