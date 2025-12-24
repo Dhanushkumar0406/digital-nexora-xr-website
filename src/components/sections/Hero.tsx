@@ -100,7 +100,7 @@ const Hero = () => {
 
       {/* Glassmorphism Scroll Indicator */}
       <div className="xs:bottom-10 absolute bottom-32 flex w-full items-center justify-center z-20">
-        <a href="#about">
+        <a href="#about" aria-label="Scroll to about section">
           <motion.div
             className="flex h-[64px] w-[35px] items-start justify-center rounded-3xl p-2 backdrop-blur-md bg-white/10 border border-white/20"
             whileHover={{ scale: 1.1 }}
