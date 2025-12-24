@@ -55,11 +55,11 @@ const Home = () => {
           </a>
         </div>
 
-        <AboutUs />
         <Tech />
         <Suspense fallback={<div className="min-h-[420px] flex items-center justify-center">Loading section…</div>}>
           <DigitalMarketing />
         </Suspense>
+        <AboutUs />
         <Contact />
       </div>
     </div>
